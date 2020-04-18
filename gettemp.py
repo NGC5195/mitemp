@@ -25,7 +25,8 @@ def poll(args):
     backend = _get_backend(args)
     poller = MiTempBtPoller(args.mac, backend)
     now = datetime.datetime.now()
-    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    date_time = now.strftime("%m/%d/%Y-%H")
+    date = now.strftime("%m/%d/%Y")
     print("Getting data Sensor: ", end='')
     print("Date: {} - ".format(date_time), end='')
     print("Name: {} - ".format(poller.name()), end='')
@@ -34,10 +35,12 @@ def poll(args):
     print("hum: {}".format(poller.parameter_value(MI_HUMIDITY)), end='')
     print(" -- ")
     r = redis.Redis()
-    r.sadd("ticks", date_time)
-    r.hset("temp", date_time , format(poller.parameter_value(MI_TEMPERATURE)))
-    r.hset("hum", date_time , format(poller.parameter_value(MI_HUMIDITY)))
-    r.hset("batt", date_time , format(poller.parameter_value(MI_BATTERY)))
+    r.sadd("date", date)
+    r.sadd("datetime", date_time)
+    r.sadd("devices", args.mac)
+    r.hset("temp", date_time+'-'+args.mac, format(poller.parameter_value(MI_TEMPERATURE)))
+    r.hset("hum", date_time+'-'+args.mac , format(poller.parameter_value(MI_HUMIDITY)))
+    r.hset("batt", date_time+'-'+args.mac , format(poller.parameter_value(MI_BATTERY)))
 
 # def scan(args):
 #     """Scan for sensors."""
