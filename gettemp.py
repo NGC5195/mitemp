@@ -38,9 +38,9 @@ def poll(args):
     r.sadd("date", date)
     r.sadd("datetime", date_time)
     r.sadd("devices", args.mac)
-    r.hset("temp", date_time+'-'+args.mac, format(poller.parameter_value(MI_TEMPERATURE)))
-    r.hset("hum", date_time+'-'+args.mac , format(poller.parameter_value(MI_HUMIDITY)))
-    r.hset("batt", date_time+'-'+args.mac , format(poller.parameter_value(MI_BATTERY)))
+    r.hset(date_time+'-'+args.mac, "temp", format(poller.parameter_value(MI_TEMPERATURE)))
+    r.hset(date_time+'-'+args.mac, "hum", format(poller.parameter_value(MI_HUMIDITY)))
+    r.hset(date_time+'-'+args.mac, "batt", format(poller.parameter_value(MI_BATTERY)))
 
 # def scan(args):
 #     """Scan for sensors."""
